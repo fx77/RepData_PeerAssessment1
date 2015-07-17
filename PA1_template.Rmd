@@ -7,7 +7,7 @@ output:
 
 
 ## Loading and preprocessing the data
-Data loaded from file "activity.csv".
+Data loaded from file "activity.csv" and decomposed by day.
 ```{r, echo=TRUE}
 activity <- read.csv("activity.csv")
 daily_total <- tapply(activity$steps, activity$date, sum, na.rm=TRUE)
