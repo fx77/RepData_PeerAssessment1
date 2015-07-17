@@ -112,19 +112,21 @@ median(DF2$sum)
 Both mean and median number of steps per day increased in the second dataset. They also became identical, due to the choice of NA value replacement.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-This code divides the data into weekends and weekdays and then plots both on a panel plot.
+This code adds a factor variable for weekends and weekdays and then plots both on a panel plot.
 
 
 ```r
 L <- (weekdays(as.Date(activity$date,'%Y-%m-%d'))=="Sunday") | (weekdays(as.Date(activity$date,'%Y-%m-%d'))=="Saturday")
 L2 <- (weekdays(as.Date(activity$date,'%Y-%m-%d'))!="Sunday") & (weekdays(as.Date(activity$date,'%Y-%m-%d'))!="Saturday")
 
-activity_weekend <- activity[L,]
-activity_week <- activity[L2,]
+activity$day <- "a"
+activity[L,]$day <- "weekend"
+activity[L2,]$day <- "weekday"
+activity$day <- as.factor(activity$day)
 
-interval_mean_weekend <- tapply(activity_weekend$steps, activity_weekend$interval, mean, na.rm=TRUE)
+interval_mean_weekend <- tapply(activity[L,]$steps, activity[L,]$interval, mean, na.rm=TRUE)
 
-interval_mean_week <- tapply(activity_week$steps, activity_week$interval, mean, na.rm=TRUE)
+interval_mean_week <- tapply(activity[L2,]$steps, activity[L2,]$interval, mean, na.rm=TRUE)
 
 par(mfrow = c(2, 1))
 par(cex = 0.6)

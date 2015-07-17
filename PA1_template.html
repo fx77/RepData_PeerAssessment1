@@ -118,16 +118,18 @@ hist(DF2$sum)</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
-<p>This code divides the data into weekends and weekdays and then plots both on a panel plot.</p>
+<p>This code adds a factor variable for weekends and weekdays and then plots both on a panel plot.</p>
 <pre class="r"><code>L &lt;- (weekdays(as.Date(activity$date,'%Y-%m-%d'))==&quot;Sunday&quot;) | (weekdays(as.Date(activity$date,'%Y-%m-%d'))==&quot;Saturday&quot;)
 L2 &lt;- (weekdays(as.Date(activity$date,'%Y-%m-%d'))!=&quot;Sunday&quot;) &amp; (weekdays(as.Date(activity$date,'%Y-%m-%d'))!=&quot;Saturday&quot;)
 
-activity_weekend &lt;- activity[L,]
-activity_week &lt;- activity[L2,]
+activity$day &lt;- &quot;a&quot;
+activity[L,]$day &lt;- &quot;weekend&quot;
+activity[L2,]$day &lt;- &quot;weekday&quot;
+activity$day &lt;- as.factor(activity$day)
 
-interval_mean_weekend &lt;- tapply(activity_weekend$steps, activity_weekend$interval, mean, na.rm=TRUE)
+interval_mean_weekend &lt;- tapply(activity[L,]$steps, activity[L,]$interval, mean, na.rm=TRUE)
 
-interval_mean_week &lt;- tapply(activity_week$steps, activity_week$interval, mean, na.rm=TRUE)
+interval_mean_week &lt;- tapply(activity[L2,]$steps, activity[L2,]$interval, mean, na.rm=TRUE)
 
 par(mfrow = c(2, 1))
 par(cex = 0.6)
