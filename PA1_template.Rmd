@@ -33,11 +33,47 @@ median(DF$sum)
 ```
 
 ## What is the average daily activity pattern?
+```{r, echo=TRUE}
+interval_mean <- tapply(activity$steps, activity$interval, mean, na.rm=TRUE)
+intervals<- strptime(sprintf("%04d", as.numeric(names(interval_mean))), format="%H%M")
+plot(intervals, interval_mean, type="l")
+```
 
+Interval with maximum number of averaged steps:
+```{r, echo=TRUE}
+m <- max(interval_mean)
+ind <- which(interval_mean==m)
+names(interval_mean[ind])
+```
 
 
 ## Imputing missing values
+The number of missing values (NA) is:
+```{r, echo=TRUE}
+length(which(is.na(activity$steps)))
+```
+Replacing missing values with an average for all intervals and creating a new dataset:
+```{r, echo=TRUE}
+activity2 <- activity
+activity2$steps[is.na(activity2$steps)] <- mean(activity2$steps, na.rm=TRUE)
+```
+Making a histogram of the new daily total number of steps:
+```{r, echo=TRUE}
+daily_total2 <- tapply(activity2$steps, activity2$date, sum, na.rm=TRUE)
+DF2 <- data.frame(date=names(daily_total2), sum=daily_total2)
+hist(DF2$sum)
+```
 
+The mean of the new total number of steps per day:
+```{r, echo=TRUE}
+mean(DF2$sum)
+```
 
+The median of new the total number of steps per day:
+```{r, echo=TRUE}
+median(DF2$sum)
+```
+
+Both mean and median number of steps per day increased in the second dataset. They also became identical, due to the choice of NA value replacement.
 
 ## Are there differences in activity patterns between weekdays and weekends?
